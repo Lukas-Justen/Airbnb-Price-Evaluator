@@ -23,7 +23,7 @@ def percent_to_num(x):
         return x
 
 
-df = get_data('01_AirbnbData/listings_firststep.csv')
+df = get_data('data/1/listings_firststep.csv')
 replace_nan(df,'host_response_rate', is_percent=True)
 replace_nan(df,'host_acceptance_rate', is_percent=True)
 print (df)
