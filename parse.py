@@ -11,16 +11,26 @@ def get_data(filepath):
 
 
 # Replace all nan values in a column with a value or statistic
-def replace_nan(df):
+def replace_nan(df, col, is_percent=False, is_categorical=False):
+    if df[col].isnull().values.any():
+        print ("Removing NaNs from: ",col)
+        if is_percent:
+            df[col] = df[col].apply(percent_to_num)
+            print (df[col].mean())
+            df[col].fillna(df[col].mean(), inplace=True)
+        if is_categorical:
+            print (df[col].mode()[0])
+            df[col].fillna(df[col].mode()[0], inplace=True)
+
+#prints columns that contain NaNs
+def nan_checker(df):
+    count=0
     for col in list(df):
         if df[col].isnull().values.any():
-            print ("Removing NaNs from: ",col)
-            if is_percent:
-                df[col] = df[col].apply(percent_to_num)
-            else:
-
-            df[col].fillna(df[col].mean(), inplace=True)
-
+            count += 1
+            print("HAS NANS: ", col)
+    if not count:
+        print ("Columns are NaN free!!!!!!")
 
 # Convert string to integer and return the integer
 def percent_to_num(x):
@@ -50,7 +60,8 @@ def url_to_image(url):
 # Converts a column that contains a list to multiple columns with hotencoding
 def convert_to_columns(df, col):
     values = get_distinct_values(df, col)
-    values.remove('')
+    if '' in values:
+        values.remove('')
     for name in values:
         create_column(df, name, 0)
     for index, row in df.iterrows():
@@ -86,10 +97,17 @@ def to_list(x):
 
 # Reads in a csv file and replaces the nan values
 df = get_data('data/1/listings_firststep.csv')
-replace_nan(df, 'host_response_rate', is_percent=True)
-replace_nan(df, 'host_acceptance_rate', is_percent=True)
+nan_checker(df)
+try:
+    replace_nan(df, 'host_response_rate', is_percent=True)
+    replace_nan(df, 'host_acceptance_rate', is_percent=True)
+    replace_nan(df, 'host_response_time', is_categorical=True)
+except Exception as e:
+    print (e)
+nan_checker(df)
+convert_to_columns(df,'host_response_time')
 convert_to_columns(df, 'amenities')
-print(df)
+print(list(df))
 
 # Downloads all the images for a given column to the given dir
 # df = get_data('data/3/listings_images_old.csv')
