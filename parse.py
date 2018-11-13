@@ -41,6 +41,12 @@ def url_to_image(url):
     return image_name
 
 
+# Counts the length of a list in a column a creates a new column with the count
+def count_list_in_column(df, col, new_name):
+    df[new_name] = df[col].apply(lambda x: len(x.split(",")))
+    del (df[col])
+
+
 # Converts a column that contains a list to multiple columns with hotencoding
 def convert_to_columns(df, col):
     values = get_distinct_values(df, col)
@@ -50,6 +56,7 @@ def convert_to_columns(df, col):
     for index, row in df.iterrows():
         columns = to_list(row[col])
         set_values(df, columns, index)
+    del (df[col])
 
 
 # Set the columns to 1 that are present in the root column
@@ -83,6 +90,7 @@ df = get_data('data/1/listings_firststep.csv')
 replace_nan(df, 'host_response_rate', is_percent=True)
 replace_nan(df, 'host_acceptance_rate', is_percent=True)
 convert_to_columns(df, 'amenities')
+count_list_in_column(df, 'host_verifications', "verifications_count")
 print(df)
 
 # Downloads all the images for a given column to the given dir
