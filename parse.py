@@ -11,10 +11,15 @@ def get_data(filepath):
 
 
 # Replace all nan values in a column with a value or statistic
-def replace_nan(df, col, is_percent=False):
-    if is_percent:
-        df[col] = df[col].apply(percent_to_num)
-    df[col].fillna(df[col].mean(), inplace=True)
+def replace_nan(df):
+    for col in list(df):
+        if df[col].isnull().values.any():
+            print ("Removing NaNs from: ",col)
+            if is_percent:
+                df[col] = df[col].apply(percent_to_num)
+            else:
+
+            df[col].fillna(df[col].mean(), inplace=True)
 
 
 # Convert string to integer and return the integer
@@ -23,6 +28,7 @@ def percent_to_num(x):
         return int(x[:-1])
     else:
         return x
+
 
 
 # Download all pictures for a given column and save new csv
