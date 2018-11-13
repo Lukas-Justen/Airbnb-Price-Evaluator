@@ -41,10 +41,48 @@ def url_to_image(url):
     return image_name
 
 
+# Converts a column that contains a list to multiple columns with hotencoding
+def convert_to_columns(df, col):
+    values = get_distinct_values(df, col)
+    values.remove('')
+    for name in values:
+        create_column(df, name, 0)
+    for index, row in df.iterrows():
+        columns = to_list(row[col])
+        set_values(df, columns, index)
+
+
+# Set the columns to 1 that are present in the root column
+def set_values(df, columns, index):
+    if '' in columns: columns.remove('')
+    for column in columns:
+        df.at[index, column] = 1
+
+
+# Creates a new column with initial value in the dataframe
+def create_column(df, name, initial_value):
+    df[name] = initial_value
+
+
+# Creates a set of unique value that appear within one column
+def get_distinct_values(df, col):
+    distinct_values = set()
+    values = df[col].apply(to_list)
+    for v in values:
+        distinct_values |= set(v)
+    return distinct_values
+
+
+# Converts the string "{'a','b','c'}" to a real python list
+def to_list(x):
+    return x[1:-1].split(",")
+
+
 # Reads in a csv file and replaces the nan values
 df = get_data('data/1/listings_firststep.csv')
 replace_nan(df, 'host_response_rate', is_percent=True)
 replace_nan(df, 'host_acceptance_rate', is_percent=True)
+convert_to_columns(df, 'amenities')
 print(df)
 
 # Downloads all the images for a given column to the given dir
