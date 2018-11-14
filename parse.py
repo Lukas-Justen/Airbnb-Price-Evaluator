@@ -13,24 +13,26 @@ def get_data(filepath):
 # Replace all nan values in a column with a value or statistic
 def replace_nan(df, col, is_percent=False, is_categorical=False):
     if df[col].isnull().values.any():
-        print ("Removing NaNs from: ",col)
+        print("Removing NaNs from: ", col)
         if is_percent:
             df[col] = df[col].apply(percent_to_num)
-            print (df[col].mean())
+            print(df[col].mean())
             df[col].fillna(df[col].mean(), inplace=True)
         if is_categorical:
-            print (df[col].mode()[0])
+            print(df[col].mode()[0])
             df[col].fillna(df[col].mode()[0], inplace=True)
 
-#prints columns that contain NaNs
+
+# prints columns that contain NaNs
 def nan_checker(df):
-    count=0
+    count = 0
     for col in list(df):
         if df[col].isnull().values.any():
             count += 1
             print("HAS NANS: ", col)
     if not count:
-        print ("Columns are NaN free!!!!!!")
+        print("Columns are NaN free!!!!!!")
+
 
 # Convert string to integer and return the integer
 def percent_to_num(x):
@@ -38,7 +40,6 @@ def percent_to_num(x):
         return int(x[:-1])
     else:
         return x
-
 
 
 # Download all pictures for a given column and save new csv
@@ -110,9 +111,9 @@ try:
     replace_nan(df, 'host_acceptance_rate', is_percent=True)
     replace_nan(df, 'host_response_time', is_categorical=True)
 except Exception as e:
-    print (e)
+    print(e)
 nan_checker(df)
-convert_to_columns(df,'host_response_time')
+convert_to_columns(df, 'host_response_time')
 convert_to_columns(df, 'amenities')
 count_list_in_column(df, 'host_verifications', "verifications_count")
 print(df)
