@@ -1,0 +1,18 @@
+drop col: access, transit, notes, neighborhood_overview, space, listing_url, scrape_id, last_scraped, name, summary action: Drop
+drop col: experiences_offered, interaction, house_rules, thumbnail_url, medium_url, xl_picture_url, host_name, host_location, host_about, host_thumbnail_url, host_url, host_neighbourhood, host_has_profile_pic, street, neighbourhood, neighbourhood_cleansed, neighbourhood_group_cleansed, city, state, zipcode, market, smart_location, country_code, country, is_location_exact, square_feet, weekly_price, monthly_price, security_deposit, cleaning_fee action: Drop
+drop col: extra_people, calendar_updated, has_availability, availability_30, availability_60, availability_90, availability_365, calendar_last_scraped, maximum_nights, license, jurisdiction_names, instant_bookable, is_business_travel_ready, require_guest_profile_picture, require_guest_phone_verification, calculated_host_listings_count action: Drop
+filter type: custom rowType: single row: ISMISSING([review_scores_value]) action: Delete
+filter type: custom rowType: single row: ISMISSING([review_scores_location]) action: Delete
+filter type: custom rowType: single row: ISMISSING([beds]) action: Delete
+filter type: custom rowType: single row: ISMISSING([bathrooms]) action: Delete
+filter type: custom rowType: single row: ISMISSING([bedrooms]) action: Delete
+filter type: custom rowType: single row: ISMISSING([host_identity_verified]) action: Delete
+move col: price position: after after: reviews_per_month
+drop col: host_listings_count action: Drop
+drop col: requires_license action: Drop
+replacepatterns col: description with: '' on: `"` global: true
+replacepatterns col: host_verifications with: '' on: `"` global: true
+replacepatterns col: host_verifications with: '' on: '\'' global: true
+replacepatterns col: host_verifications with: '{' on: `[` global: true
+replacepatterns col: host_verifications with: '}' on: `]` global: true
+replacepatterns col: amenities with: '' on: `"` global: true

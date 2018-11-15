@@ -1,0 +1,2 @@
+drop col: description, picture_url, reviews_per_month, review_scores_value, review_scores_location, review_scores_communication, review_scores_checkin, review_scores_cleanliness, review_scores_accuracy, review_scores_rating, last_review, first_review, number_of_reviews action: Drop
+drop col: host_picture_url action: Drop
