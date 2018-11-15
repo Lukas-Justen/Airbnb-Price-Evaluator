@@ -1,6 +1,8 @@
 import uuid
+
 import pandas
 import requests
+
 
 # Read in a csv file from a given path
 def get_data(filepath):
@@ -74,6 +76,7 @@ def convert_to_columns(df, col):
         set_values(df, columns, index)
     del (df[col])
 
+
 # Set the columns to 1 that are present in the root column
 def set_values(df, columns, index):
     if '' in columns: columns.remove('')
@@ -94,20 +97,28 @@ def get_distinct_values(df, col):
         distinct_values |= set(v)
     return distinct_values
 
-def encode(df,col):
-    keys =  {x:i for i,x in enumerate(list(set(df[col])))}
-    print (keys)
+
+def encode(df, col):
+    keys = {x: i for i, x in enumerate(list(set(df[col])))}
+    print(keys)
     df[col] = df[col].map(keys)
+
 
 # Converts the string "{'a','b','c'}" to a real python list
 def to_list(x):
     return x[1:-1].split(",")
+
 
 def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         df = df.append(pandas.read_csv(files))
     df.reset_index().drop(['index', 'host_since', 'host_id'], axis=1).to_csv('data/listings_first_concat.csv')
+
+
+def convert_price_to_integer(df, col):
+    df[col] = df[col].apply(lambda x: float(x.replace('$', '').replace(',', '').replace('"', '')))
+
 
 # Reads in a csv file and replaces the nan values
 
@@ -128,13 +139,14 @@ def get_processed_data():
     nan_checker(df)
     convert_to_columns(df, 'amenities')
     count_list_in_column(df, 'host_verifications', "verifications_count")
-    encode(df,'host_response_time')
-    encode(df,'host_is_superhost')
-    encode(df,'host_identity_verified')
-    encode(df,'property_type')
-    encode(df,'room_type')
-    encode(df,'bed_type')
-    encode(df,'cancellation_policy')
+    convert_price_to_integer(df, 'price')
+    encode(df, 'host_response_time')
+    encode(df, 'host_is_superhost')
+    encode(df, 'host_identity_verified')
+    encode(df, 'property_type')
+    encode(df, 'room_type')
+    encode(df, 'bed_type')
+    encode(df, 'cancellation_policy')
     print(df)
     return df
 
