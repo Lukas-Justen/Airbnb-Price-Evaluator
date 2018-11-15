@@ -1,0 +1,34 @@
+drop col: listing_url action: Drop
+drop col: scrape_id action: Drop
+drop col: last_scraped action: Drop
+drop col: experiences_offered action: Drop
+replacepatterns col: summary with: '' on: `"` global: true
+replacepatterns col: space with: '' on: `"` global: true
+replacepatterns col: description with: '' on: `"` global: true
+replacepatterns col: neighborhood_overview with: '' on: `"` global: true
+replacepatterns col: notes with: '' on: `"` global: true
+replacepatterns col: transit with: '' on: `"` global: true
+drop col: thumbnail_url,medium_url,xl_picture_url,host_url action: Drop
+replacepatterns col: host_picture_url with: '' on: `"` global: true
+drop col: host_thumbnail_url action: Drop
+drop col: host_listings_count action: Drop
+replacepatterns col: street with: '' on: `"` global: true
+drop col: neighbourhood,neighbourhood_group_cleansed action: Drop
+rename type: manual mapping: [neighbourhood_cleansed,'neighbourhood']
+settype col: zipcode type: 'Zipcode'
+drop col: state,city,smart_location,country_code,country action: Drop
+rename type: manual mapping: [market,'city']
+drop col: square_feet action: Drop
+drop col: security_deposit,monthly_price,weekly_price action: Drop
+drop col: calendar_updated, has_availability, availability_90, availability_60, availability_30, availability_365, calendar_last_scraped action: Drop
+drop col: requires_license, license, jurisdiction_names, instant_bookable, require_guest_profile_picture, require_guest_phone_verification, calculated_host_listings_count action: Drop
+drop col: host_location action: Drop
+replacepatterns col: host_about with: '' on: `"` global: true
+drop col: host_has_profile_pic action: Drop
+replacepatterns col: zipcode with: '98107' on: `""` global: true
+replacepatterns col: zipcode with: '98122' on: `"99\n98122"` global: true
+drop col: is_location_exact,cleaning_fee,maximum_nights action: Drop
+drop col: notes action: Drop
+replacepatterns col: host_verifications with: '' on: `"` global: true
+replacepatterns col: amenities with: '' on: `"` global: true
+drop col: extra_people action: Drop

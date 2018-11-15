@@ -1,8 +1,0 @@
-drop col: name, summary, space, description, neighborhood_overview, transit, host_name, host_about, host_neighbourhood, street, neighbourhood, zipcode, city action: Drop
-filter type: custom rowType: single row: ISMISSING([reviews_per_month]) action: Delete
-filter type: custom rowType: single row: ISMISSING([review_scores_location]) action: Delete
-filter type: custom rowType: single row: ISMISSING([review_scores_value]) action: Delete
-filter type: custom rowType: single row: ISMISSING([review_scores_checkin]) action: Delete
-filter type: custom rowType: single row: ISMISSING([review_scores_accuracy]) action: Delete
-filter type: custom rowType: single row: ISMISSING([bedrooms]) action: Delete
-filter type: custom rowType: single row: ISMISSING([bathrooms]) action: Delete

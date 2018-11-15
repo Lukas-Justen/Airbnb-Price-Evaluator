@@ -1,0 +1,8 @@
+drop col: picture_url, name, summary, space, description, neighborhood_overview, transit, host_about, host_picture_url, host_neighbourhood, street, neighbourhood, zipcode, city, host_name action: Drop
+move col: price position: after after: reviews_per_month
+filter type: custom rowType: single row: ISMISSING([reviews_per_month]) action: Delete
+filter type: custom rowType: single row: ISMISSING([review_scores_value]) action: Delete
+filter type: custom rowType: single row: ISMISSING([review_scores_checkin]) action: Delete
+filter type: custom rowType: single row: ISMISSING([review_scores_accuracy]) action: Delete
+filter type: custom rowType: single row: ISMISSING([bedrooms]) action: Delete
+filter type: custom rowType: single row: ISMISSING([bathrooms]) action: Delete
