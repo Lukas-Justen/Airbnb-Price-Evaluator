@@ -1,0 +1,4 @@
+drop col: picture_url,host_picture_url action: Drop
+filter type: custom rowType: single row: ISMISSING([description]) action: Delete
+filter type: missing missing: review_scores_rating action: Delete
+filter type: missing missing: review_scores_communication action: Delete

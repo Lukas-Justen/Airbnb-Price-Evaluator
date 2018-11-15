@@ -1,0 +1,3 @@
+drop col: description,picture_url,host_picture_url action: Drop
+filter type: missing missing: review_scores_rating action: Delete
+filter type: missing missing: review_scores_communication action: Delete
