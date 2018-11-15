@@ -1,8 +1,6 @@
 import uuid
-
 import pandas
 import requests
-
 
 # Read in a csv file from a given path
 def get_data(filepath):
@@ -75,7 +73,6 @@ def convert_to_columns(df, col):
         set_values(df, columns, index)
     del (df[col])
 
-
 # Set the columns to 1 that are present in the root column
 def set_values(df, columns, index):
     if '' in columns: columns.remove('')
@@ -96,6 +93,10 @@ def get_distinct_values(df, col):
         distinct_values |= set(v)
     return distinct_values
 
+def encode(df,col):
+    keys =  {x:i for i,x in enumerate(list(set(df[col])))}
+    print (keys)
+    df[col] = df[col].map(keys)
 
 # Converts the string "{'a','b','c'}" to a real python list
 def to_list(x):
@@ -112,9 +113,9 @@ try:
 except Exception as e:
     print (e)
 nan_checker(df)
-convert_to_columns(df,'host_response_time')
 convert_to_columns(df, 'amenities')
 count_list_in_column(df, 'host_verifications', "verifications_count")
+encode(df,'host_response_time')
 print(df)
 
 # Downloads all the images for a given column to the given dir
