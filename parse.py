@@ -94,6 +94,7 @@ def get_distinct_values(df, col):
         distinct_values |= set(v)
     return distinct_values
 
+#encodes categorical attributes to consecutive numbers
 def encode(df,col):
     keys =  {x:i for i,x in enumerate(list(set(df[col])))}
     print (keys)
@@ -109,12 +110,13 @@ def csv_concat(filelist):
         df = df.append(pandas.read_csv(files))
     df.reset_index().drop(['index', 'host_since', 'host_id'], axis=1).to_csv('data/listings_first_concat.csv')
 
-# Reads in a csv file and replaces the nan values
 
 
 # csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
 
+#function that returns cleaned dataframe
 def get_processed_data():
+    # Reads in a csv file and replaces the nan values
     df = get_data('data/listings_first_concat.csv')
 
     nan_checker(df)
