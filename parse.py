@@ -107,27 +107,36 @@ def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         df = df.append(pandas.read_csv(files))
-    df.reset_index().drop(['index'], axis=1).to_csv('data/listings_first_concat.csv')
+    df.reset_index().drop(['index', 'host_since', 'host_id'], axis=1).to_csv('data/listings_first_concat.csv')
 
 # Reads in a csv file and replaces the nan values
 
 
-csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
-df = get_data('data/listings_first_concat.csv')
+# csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
 
-nan_checker(df)
-try:
-    replace_nan(df, 'host_response_rate', is_percent=True)
-    replace_nan(df, 'host_acceptance_rate', is_percent=True)
-    replace_nan(df, 'host_response_time', is_categorical=True)
-    replace_nan(df, 'beds', is_categorical=True)
-except Exception as e:
-    print(e)
-nan_checker(df)
-convert_to_columns(df, 'amenities')
-count_list_in_column(df, 'host_verifications', "verifications_count")
-encode(df,'host_response_time')
-print(df)
+def get_processed_data():
+    df = get_data('data/listings_first_concat.csv')
+
+    nan_checker(df)
+    try:
+        replace_nan(df, 'host_response_rate', is_percent=True)
+        replace_nan(df, 'host_acceptance_rate', is_percent=True)
+        replace_nan(df, 'host_response_time', is_categorical=True)
+        replace_nan(df, 'beds', is_categorical=True)
+    except Exception as e:
+        print(e)
+    nan_checker(df)
+    convert_to_columns(df, 'amenities')
+    count_list_in_column(df, 'host_verifications', "verifications_count")
+    encode(df,'host_response_time')
+    encode(df,'host_is_superhost')
+    encode(df,'host_identity_verified')
+    encode(df,'property_type')
+    encode(df,'room_type')
+    encode(df,'bed_type')
+    encode(df,'cancellation_policy')
+    print(df)
+    return df
 
 # Downloads all the images for a given column to the given dir
 # df = get_data('data/3/listings_images_old.csv')
