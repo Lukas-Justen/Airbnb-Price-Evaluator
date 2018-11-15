@@ -103,14 +103,24 @@ def encode(df,col):
 def to_list(x):
     return x[1:-1].split(",")
 
+def csv_concat(filelist):
+    df = pandas.DataFrame()
+    for files in filelist:
+        df = df.append(pandas.read_csv(files))
+    df.reset_index().drop(['index'], axis=1).to_csv('data/listings_first_concat.csv')
 
 # Reads in a csv file and replaces the nan values
-df = get_data('data/1/listings_firststep.csv')
+
+
+csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
+df = get_data('data/listings_first_concat.csv')
+
 nan_checker(df)
 try:
     replace_nan(df, 'host_response_rate', is_percent=True)
     replace_nan(df, 'host_acceptance_rate', is_percent=True)
     replace_nan(df, 'host_response_time', is_categorical=True)
+    replace_nan(df, 'beds', is_categorical=True)
 except Exception as e:
     print(e)
 nan_checker(df)
