@@ -125,7 +125,9 @@ def convert_price_to_integer(df, col):
 
 # csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
 
+#function that returns cleaned dataframe
 def get_processed_data():
+    # Reads in a csv file and replaces the nan values
     df = get_data('data/listings_first_concat.csv')
 
     nan_checker(df)
