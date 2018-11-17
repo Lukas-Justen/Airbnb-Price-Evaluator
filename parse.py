@@ -150,6 +150,7 @@ def get_processed_data():
     encode(df, 'bed_type')
     encode(df, 'cancellation_policy')
     print(df)
+    # df.to_csv('data/listings_first_concat_clean.csv')
     return df
 
 # Downloads all the images for a given column to the given dir
