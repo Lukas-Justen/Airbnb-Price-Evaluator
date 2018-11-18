@@ -55,6 +55,7 @@ def url_to_image(url):
     file = open(output_dir + image_name, 'wb')
     image = requests.get(url).content
     file.write(image)
+    file.close()
     return image_name
 
 
