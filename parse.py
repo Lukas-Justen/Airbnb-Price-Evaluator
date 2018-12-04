@@ -124,12 +124,14 @@ def convert_price_to_integer(df, col):
 # Reads in a csv file and replaces the nan values
 
 
-# csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
+csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv','data/newyork/1/listings_first.csv'])
+
 
 #function that returns cleaned dataframe
 def get_processed_data():
     # Reads in a csv file and replaces the nan values
     df = get_data('data/listings_first_concat.csv')
+
 
     nan_checker(df)
     try:
@@ -151,7 +153,7 @@ def get_processed_data():
     encode(df, 'bed_type')
     encode(df, 'cancellation_policy')
     print(df)
-    # df.to_csv('data/listings_first_concat_clean.csv')
+    df.to_csv('data/listings_first_concat_clean.csv')
     return df
 
 # Downloads all the images for a given column to the given dir
