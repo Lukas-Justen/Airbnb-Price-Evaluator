@@ -114,7 +114,7 @@ def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         df = df.append(pandas.read_csv(files))
-    df.reset_index().drop(['index', 'host_since', 'host_id'], axis=1).to_csv('data/listings_first_concat.csv')
+    df.reset_index().drop(['index', 'host_since', 'host_id','id'], axis=1).to_csv('data/listings_first_concat.csv', index=False)
 
 
 def convert_price_to_integer(df, col):
@@ -152,10 +152,11 @@ def get_processed_data():
     encode(df, 'room_type')
     encode(df, 'bed_type')
     encode(df, 'cancellation_policy')
-    print(df)
-    df.to_csv('data/listings_first_concat_clean.csv')
+    # print(df)
+    df.to_csv('data/listings_first_concat_clean.csv', index=False)
     return df
 
+get_processed_data()
 # Downloads all the images for a given column to the given dir
 # df = get_data('data/3/listings_images_old.csv')
 # download_images(df, 'picture_url', 'picture', 'data/3/listings_images.csv')
