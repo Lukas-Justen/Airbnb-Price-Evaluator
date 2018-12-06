@@ -13,23 +13,23 @@ def get_data(filepath):
 # Replace all nan values in a column with a value or statistic
 def replace_nan(df, col, is_percent=False, is_categorical=False):
     if df[col].isnull().values.any():
-        print("Removing NaNs from: ", col)
+        # print("Removing NaNs from: ", col)
         if is_percent:
             df[col] = df[col].apply(percent_to_num)
-            print(df[col].mean())
+            # print(df[col].mean())
             df[col].fillna(df[col].mean(), inplace=True)
         if is_categorical:
-            print(df[col].mode()[0])
+            # print(df[col].mode()[0])
             df[col].fillna(df[col].mode()[0], inplace=True)
 
 
-# prints columns that contain NaNs
+# # prints columns that contain NaNs
 def nan_checker(df):
     count = 0
     for col in list(df):
         if df[col].isnull().values.any():
             count += 1
-            print("HAS NANS: ", col)
+            # print("HAS NANS: ", col)
     if not count:
         print("Columns are NaN free!!!!!!")
 
@@ -101,7 +101,7 @@ def get_distinct_values(df, col):
 
 def encode(df, col):
     keys = {x: i for i, x in enumerate(list(set(df[col])))}
-    print(keys)
+    # print(keys)
     df[col] = df[col].map(keys)
 
 
@@ -124,7 +124,7 @@ def convert_price_to_integer(df, col):
 # Reads in a csv file and replaces the nan values
 
 
-csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv','data/newyork/1/listings_first.csv'])
+csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv'])
 
 
 #function that returns cleaned dataframe
