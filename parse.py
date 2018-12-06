@@ -13,13 +13,13 @@ def get_data(filepath):
 # Replace all nan values in a column with a value or statistic
 def replace_nan(df, col, is_percent=False, is_categorical=False):
     if df[col].isnull().values.any():
-        print("Removing NaNs from: ", col)
+        # print("Removing NaNs from: ", col)
         if is_percent:
             df[col] = df[col].apply(percent_to_num)
-            print(df[col].mean())
+            # print(df[col].mean())
             df[col].fillna(df[col].mean(), inplace=True)
         if is_categorical:
-            print(df[col].mode()[0])
+            # print(df[col].mode()[0])
             df[col].fillna(df[col].mode()[0], inplace=True)
 
 
@@ -29,9 +29,10 @@ def nan_checker(df):
     for col in list(df):
         if df[col].isnull().values.any():
             count += 1
-            print("HAS NANS: ", col)
+            # print("HAS NANS: ", col)
     if not count:
-        print("Columns are NaN free!!!!!!")
+        print()
+        # print("Columns are NaN free!!!!!!")
 
 
 # Convert string to integer and return the integer
@@ -101,62 +102,77 @@ def get_distinct_values(df, col):
 
 def encode(df, col):
     keys = {x: i for i, x in enumerate(list(set(df[col])))}
-    print(keys)
+    # print(keys)
     df[col] = df[col].map(keys)
 
 
 # Converts the string "{'a','b','c'}" to a real python list
 def to_list(x):
-    return x[1:-1].split(",")
+    return x[1:-1].lower().split(",")
 
 
 def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
-        df = df.append(pandas.read_csv(files))
-    df.reset_index().drop(['index', 'host_since', 'host_id','id'], axis=1).to_csv('data/listings_first_concat.csv', index=False)
+        data = pandas.read_csv(files)
+        df = df.append(data)
+    df.reset_index().drop(
+        ['index', 'host_since', 'host_id', 'id', 'host_response_time', 'host_response_rate', 'host_acceptance_rate',
+          'host_verifications', 'host_identity_verified'],
+        axis=1).to_csv('data/listings_first_concat.csv', index=False)
 
 
 def convert_price_to_integer(df, col):
     df[col] = df[col].apply(lambda x: float(x.replace('$', '').replace(',', '').replace('"', '')))
 
 
-# Reads in a csv file and replaces the nan values
+def shuffle_file(filename):
+    df = pandas.read_csv(filename)
+    df = df.sample(frac=1)
+    df.to_csv(filename, index=False)
 
 
-csv_concat(['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv','data/newyork/1/listings_first.csv'])
+def reduce_size(filename, rows, newfile):
+    df = pandas.read_csv(filename)
+    df = df.head(rows)
+    df.to_csv(newfile, index=False)
 
 
-#function that returns cleaned dataframe
+# function that returns cleaned dataframe
 def get_processed_data():
-    # Reads in a csv file and replaces the nan values
     df = get_data('data/listings_first_concat.csv')
-
 
     nan_checker(df)
     try:
-        replace_nan(df, 'host_response_rate', is_percent=True)
-        replace_nan(df, 'host_acceptance_rate', is_percent=True)
-        replace_nan(df, 'host_response_time', is_categorical=True)
+        # replace_nan(df, 'host_response_rate', is_percent=True)
+        # replace_nan(df, 'host_acceptance_rate', is_percent=True)
+        # replace_nan(df, 'host_response_time', is_categorical=True)
         replace_nan(df, 'beds', is_categorical=True)
     except Exception as e:
         print(e)
     nan_checker(df)
     convert_to_columns(df, 'amenities')
-    count_list_in_column(df, 'host_verifications', "verifications_count")
+    # count_list_in_column(df, 'host_verifications', "verifications_count")
     convert_price_to_integer(df, 'price')
-    encode(df, 'host_response_time')
+    # encode(df, 'host_response_time')
     encode(df, 'host_is_superhost')
-    encode(df, 'host_identity_verified')
+    # encode(df, 'host_identity_verified')
     encode(df, 'property_type')
     encode(df, 'room_type')
     encode(df, 'bed_type')
     encode(df, 'cancellation_policy')
-    # print(df)
+    encode(df, 'neighbourhood')
     df.to_csv('data/listings_first_concat_clean.csv', index=False)
     return df
 
+
+# Reads in a csv file and replaces the nan values
+csv_concat(
+    ['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv', 'data/newyork/1/listings_first.csv'])
+# csv_concat(
+#     ['data/newyork/1/listings_first.csv'])
 get_processed_data()
+# get_processed_data()
 # Downloads all the images for a given column to the given dir
 # df = get_data('data/3/listings_images_old.csv')
 # download_images(df, 'picture_url', 'picture', 'data/3/listings_images.csv')
