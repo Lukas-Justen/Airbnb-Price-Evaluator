@@ -23,7 +23,7 @@ def replace_nan(df, col, is_percent=False, is_categorical=False):
             df[col].fillna(df[col].mode()[0], inplace=True)
 
 
-# # prints columns that contain NaNs
+# prints columns that contain NaNs
 def nan_checker(df):
     count = 0
     for col in list(df):
@@ -100,6 +100,7 @@ def get_distinct_values(df, col):
     return distinct_values
 
 
+# Converts a column of string to hot encoded integers
 def encode(df, col):
     keys = {x: i for i, x in enumerate(list(set(df[col])))}
     # print(keys)
@@ -111,35 +112,42 @@ def to_list(x):
     return x[1:-1].lower().split(",")
 
 
-def csv_concat(filelist):
-    df = pandas.DataFrame()
-    for files in filelist:
-        data = pandas.read_csv(files)
-        df = df.append(data)
-    df.reset_index().drop(
-        ['index', 'host_since', 'host_id', 'host_name','id', 'host_response_time', 'host_response_rate', 'host_acceptance_rate',
-         'host_verifications', 'host_identity_verified', 'description'],
-        # df.reset_index().drop(
-        # ['index', 'host_since', 'host_id','host_name' 'id', 'host_response_time', 'host_response_rate',
-        #  'host_acceptance_rate',
-        #  'host_verifications', 'host_identity_verified'],
-        axis=1).to_csv('data/listings_first_concat.csv', index=False)
-
-
+# Converts the price column to an integer
 def convert_price_to_integer(df, col):
     df[col] = df[col].apply(lambda x: float(x.replace('$', '').replace(',', '').replace('"', '')))
 
 
+# Shuffles the rows of the given file and stores it back on disk
 def shuffle_file(filename):
     df = pandas.read_csv(filename)
     df = df.sample(frac=1)
     df.to_csv(filename, index=False)
 
 
+# Reduces the number of rows of the given file and stores it into anotehr file
 def reduce_size(filename, rows, newfile):
     df = pandas.read_csv(filename)
     df = df.head(rows)
     df.to_csv(newfile, index=False)
+
+
+# Add a new column to the given file with default value
+def add_column_with(file, col, value):
+    df = pandas.read_csv(file)
+    df[col] = value
+    df.to_csv(file)
+
+
+# Concatenates all files in the given list
+def csv_concat(filelist):
+    df = pandas.DataFrame()
+    for files in filelist:
+        data = pandas.read_csv(files)
+        df = df.append(data)
+    df.reset_index().drop(
+        ['index', 'host_since', 'host_id', 'host_name', 'id', 'host_response_time', 'host_response_rate',
+         'host_acceptance_rate', 'host_verifications', 'host_identity_verified', 'description','market'],
+        axis=1).to_csv('data/listings_first_concat.csv', index=False)
 
 
 # function that returns cleaned dataframe
@@ -157,40 +165,34 @@ def get_processed_data():
         print(e)
     nan_checker(df)
     print(df.columns)
+    convert_price_to_integer(df, 'price')
     convert_to_columns(df, 'amenities')
     # count_list_in_column(df, 'amenities', "amenities_count")
     # count_list_in_column(df, 'host_verifications', "verifications_count")
-    convert_price_to_integer(df, 'price')
+    # encode(df, 'host_identity_verified')
     # encode(df, 'host_response_time')
     encode(df, 'host_is_superhost')
-    # encode(df, 'host_identity_verified')
     encode(df, 'property_type')
     encode(df, 'room_type')
     encode(df, 'bed_type')
+    # encode(df, 'market')
     encode(df, 'cancellation_policy')
     encode(df, 'neighbourhood')
 
     df.to_csv('data/listings_first_concat_clean.csv', index=False)
-    for c in df.columns:
-        print(c)
-    print(set(df['number_of_reviews']))
-    print(set(df['review_scores_rating']))
-    print(set(df['reviews_per_month']))
     return df
 
 
 # shuffle_file('data/newyork/listings_newyork.csv')
 # reduce_size('data/newyork/listings_newyork.csv', 8000,'data/newyork/listings_newyork_reduced.csv')
 
-# Reads in a csv file and replaces the nan values
-csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv'])
+# add_column_with('data/boston/listings_details.csv','market','Boston')
+# add_column_with('data/seattle/listings_details.csv','market','Seattle')
+# add_column_with('data/newyork/listings_details.csv','market','New York')
 
-# csv_concat(
-#     ['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv', 'data/newyork/1/listings_first.csv'])
-# csv_concat(
-#     ['data/newyork/1/listings_first.csv'])
+csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv'])
 get_processed_data()
-# get_processed_data()
+
 # Downloads all the images for a given column to the given dir
 # df = get_data('data/3/listings_images_old.csv')
 # download_images(df, 'picture_url', 'picture', 'data/3/listings_images.csv')
