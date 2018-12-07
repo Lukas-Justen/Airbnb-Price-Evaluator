@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split, cross_validate
 
 data = pd.read_csv('./data/listings_first_concat_clean.csv')
 data = data.loc[data['price'] < 699]
-# data = data.sample(frac=1)
+data = data.sample(frac=1)
 
 y = data['price']
 X = data.drop(['price'], axis=1)
@@ -17,14 +17,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 
 print("Random Forest")
 clf = RandomForestRegressor(n_estimators=500, max_features=14, max_depth=40)
-# clf.fit(X_train, y_train)
-# print(clf.score(X_train, y_train))
-# print(clf.score(X_test, y_test))
+clf.fit(X_train, y_train)
+print(clf.score(X_train, y_train))
+print(clf.score(X_test, y_test))
 
-cv_results = cross_validate(clf, X, y, cv=3, return_train_score=True)
-print(sorted(cv_results.keys()))
-print(cv_results['test_score'])
-print(cv_results['train_score'])
+# cv_results = cross_validate(clf, X, y, cv=3, return_train_score=True)
+# print(sorted(cv_results.keys()))
+# print(cv_results['test_score'])
+# print(cv_results['train_score'])
 
 # print("Ridge Regression")
 # ridge = Ridge(alpha=1.0)
