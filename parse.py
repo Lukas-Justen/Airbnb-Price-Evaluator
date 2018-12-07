@@ -117,8 +117,12 @@ def csv_concat(filelist):
         data = pandas.read_csv(files)
         df = df.append(data)
     df.reset_index().drop(
-        ['index', 'host_since', 'host_id', 'id', 'host_response_time', 'host_response_rate', 'host_acceptance_rate',
-          'host_verifications', 'host_identity_verified'],
+        ['index', 'host_since', 'host_id', 'host_name','id', 'host_response_time', 'host_response_rate', 'host_acceptance_rate',
+         'host_verifications', 'host_identity_verified', 'description'],
+        # df.reset_index().drop(
+        # ['index', 'host_since', 'host_id','host_name' 'id', 'host_response_time', 'host_response_rate',
+        #  'host_acceptance_rate',
+        #  'host_verifications', 'host_identity_verified'],
         axis=1).to_csv('data/listings_first_concat.csv', index=False)
 
 
@@ -148,10 +152,13 @@ def get_processed_data():
         # replace_nan(df, 'host_acceptance_rate', is_percent=True)
         # replace_nan(df, 'host_response_time', is_categorical=True)
         replace_nan(df, 'beds', is_categorical=True)
+        replace_nan(df, 'review_scores_rating', is_percent=True)
     except Exception as e:
         print(e)
     nan_checker(df)
+    print(df.columns)
     convert_to_columns(df, 'amenities')
+    # count_list_in_column(df, 'amenities', "amenities_count")
     # count_list_in_column(df, 'host_verifications', "verifications_count")
     convert_price_to_integer(df, 'price')
     # encode(df, 'host_response_time')
@@ -162,13 +169,24 @@ def get_processed_data():
     encode(df, 'bed_type')
     encode(df, 'cancellation_policy')
     encode(df, 'neighbourhood')
+
     df.to_csv('data/listings_first_concat_clean.csv', index=False)
+    for c in df.columns:
+        print(c)
+    print(set(df['number_of_reviews']))
+    print(set(df['review_scores_rating']))
+    print(set(df['reviews_per_month']))
     return df
 
 
+# shuffle_file('data/newyork/listings_newyork.csv')
+# reduce_size('data/newyork/listings_newyork.csv', 8000,'data/newyork/listings_newyork_reduced.csv')
+
 # Reads in a csv file and replaces the nan values
-csv_concat(
-    ['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv', 'data/newyork/1/listings_first.csv'])
+csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv'])
+
+# csv_concat(
+#     ['data/boston/1/listings_first.csv', 'data/seattle/1/listings_firststep.csv', 'data/newyork/1/listings_first.csv'])
 # csv_concat(
 #     ['data/newyork/1/listings_first.csv'])
 get_processed_data()
