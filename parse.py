@@ -193,9 +193,10 @@ def get_processed_data(file, encode=False):
     pp = pprint.PrettyPrinter(width=80, compact=True)
     print('Current columns:')
     pp.pprint(sorted(df.columns))
-    print('columns number:', len(df.columns))
+    print('columns number:', len(df.columns), '\n')
 
-    df.to_csv('data/listings_cleanse.csv', index=False)
+    df.to_csv('data/listings_cleansed.csv', index=False)
+    print('output: data/listings_cleansed.csv')
     return df
 
 # shuffle_file('data/newyork/listings_newyork.csv')
