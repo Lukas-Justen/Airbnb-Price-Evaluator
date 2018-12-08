@@ -1,4 +1,5 @@
 import uuid
+import pprint
 
 import pandas
 import requests
@@ -25,14 +26,14 @@ def replace_nan(df, col, is_percent=False, is_categorical=False):
 
 # prints columns that contain NaNs
 def nan_checker(df):
+    print('Checking NaNs...')
     count = 0
     for col in list(df):
         if df[col].isnull().values.any():
             count += 1
-            # print("HAS NANS: ", col)
+            print("{0} has NaNs: ".format(col))
     if not count:
-        print()
-        # print("Columns are NaN free!!!!!!")
+        print("Columns are NaN free.\n")
 
 
 # Convert string to integer and return the integer
@@ -66,7 +67,7 @@ def count_list_in_column(df, col, new_name):
     del (df[col])
 
 
-# Converts a column that contains a list to multiple columns with hotencoding
+# Converts a column that contains a list to multiple columns with one-hot encoding
 def convert_to_columns(df, col):
     values = get_distinct_values(df, col)
     if '' in values:
@@ -100,7 +101,7 @@ def get_distinct_values(df, col):
     return distinct_values
 
 
-# Converts a column of string to hot encoded integers
+# encode categorical features (columns of strings to columns of integers)
 def encode(df, col):
     keys = {x: i for i, x in enumerate(list(set(df[col])))}
     # print(keys)
@@ -125,7 +126,7 @@ def shuffle_file(filename):
 
 
 # Reduces the number of rows of the given file and stores it into anotehr file
-def reduce_size(filename, rows, newfile):
+def reduce_size_to(filename, rows, newfile):
     df = pandas.read_csv(filename)
     df = df.head(rows)
     df.to_csv(newfile, index=False)
@@ -143,7 +144,7 @@ def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         data = pandas.read_csv(files)
-        df = df.append(data)
+        df = df.append(data, sort=False)
     df.reset_index().drop(
         ['index', 'host_since', 'host_id', 'host_name', 'id', 'host_response_time', 'host_response_rate',
          'host_acceptance_rate', 'host_verifications', 'host_identity_verified', 'description','market'],
@@ -151,49 +152,65 @@ def csv_concat(filelist):
 
 
 # function that returns cleaned dataframe
-def get_processed_data():
-    df = get_data('data/listings_first_concat.csv')
+def get_processed_data(file, encode=False):
+    df = get_data(file)
 
+    # check and replace any NaNs
     nan_checker(df)
     try:
-        # replace_nan(df, 'host_response_rate', is_percent=True)
-        # replace_nan(df, 'host_acceptance_rate', is_percent=True)
-        # replace_nan(df, 'host_response_time', is_categorical=True)
+        '''
+        some one check this part? the following keys were dropped in 'csv_concat' function
+        replace_nan(df, 'host_response_rate', is_percent=True)
+        replace_nan(df, 'host_acceptance_rate', is_percent=True)
+        replace_nan(df, 'host_response_time', is_categorical=True)
+        '''
+        print('replacing NaNs...')
         replace_nan(df, 'beds', is_categorical=True)
         replace_nan(df, 'review_scores_rating', is_percent=True)
     except Exception as e:
         print(e)
     nan_checker(df)
-    print(df.columns)
+
     convert_price_to_integer(df, 'price')
     convert_to_columns(df, 'amenities')
-    # count_list_in_column(df, 'amenities', "amenities_count")
-    # count_list_in_column(df, 'host_verifications', "verifications_count")
-    # encode(df, 'host_identity_verified')
-    # encode(df, 'host_response_time')
-    encode(df, 'host_is_superhost')
-    encode(df, 'property_type')
-    encode(df, 'room_type')
-    encode(df, 'bed_type')
-    # encode(df, 'market')
-    encode(df, 'cancellation_policy')
-    encode(df, 'neighbourhood')
+    '''
+    some one check this part?  the following keys were dropped in 'csv_concat' function
+    count_list_in_column(df, 'amenities', "amenities_count")
+    count_list_in_column(df, 'host_verifications', "verifications_count")
+    encode(df, 'host_identity_verified')
+    encode(df, 'host_response_time')
+    '''
+    if encode:
+        encode(df, 'host_is_superhost')
+        encode(df, 'property_type')
+        encode(df, 'room_type')
+        encode(df, 'bed_type')
+        encode(df, 'market')
+        encode(df, 'cancellation_policy')
+        encode(df, 'neighbourhood')
 
-    df.to_csv('data/listings_first_concat_clean.csv', index=False)
+    # print columns
+    pp = pprint.PrettyPrinter(width=80, compact=True)
+    print('Current columns:')
+    pp.pprint(sorted(df.columns))
+    print('columns number:', len(df.columns))
+
+    df.to_csv('data/listings_cleanse.csv', index=False)
     return df
 
-
 # shuffle_file('data/newyork/listings_newyork.csv')
-# reduce_size('data/newyork/listings_newyork.csv', 8000,'data/newyork/listings_newyork_reduced.csv')
+# reduce_size_to('data/newyork/listings_newyork.csv', 8000,'data/newyork/listings_newyork_reduced.csv')
 
 # add_column_with('data/boston/listings_details.csv','market','Boston')
 # add_column_with('data/seattle/listings_details.csv','market','Seattle')
 # add_column_with('data/newyork/listings_details.csv','market','New York')
 
-csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv'])
-get_processed_data()
+csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv','data/newyork/listings_details.csv'])
+get_processed_data('data/listings_first_concat.csv')
 
+'''
 # Downloads all the images for a given column to the given dir
-# df = get_data('data/3/listings_images_old.csv')
-# download_images(df, 'picture_url', 'picture', 'data/3/listings_images.csv')
-# print(df)
+df = get_data('data/3/listings_images_old.csv')
+download_images(df, 'picture_url', 'picture', 'data/3/listings_images.csv')
+print(df)
+'''
