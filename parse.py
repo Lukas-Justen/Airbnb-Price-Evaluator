@@ -148,12 +148,12 @@ def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         data = pandas.read_csv(files)
-        if files == 'data/newyork/listings_details.csv':
-            df = df.append(data[:3000],sort=False)
-        else:
-            df = df.append(data, sort=False)
+        # if files == 'data/newyork/listings_details.csv':
+        #     df = df.append(data[:3000],sort=False)
+        # else:
+        df = df.append(data, sort=False)
     df.reset_index().drop(
-        ['index','Unnamed: 0', 'host_since', 'host_id', 'host_name', 'id', 'market'],
+        ['index','Unnamed: 0', 'host_since','host_name', 'host_id', 'id', 'market'],
         axis=1).to_csv('data/listings_first_concat.csv', index=False)
 
 def convert_to_sentiment(df,col):
@@ -169,8 +169,8 @@ def get_processed_data(file):
 
     nan_checker(df)
     try:
-        replace_nan(df, 'host_response_time', is_categorical=True)
         replace_nan(df, 'host_acceptance_rate', is_percent=True)
+        replace_nan(df, 'host_response_time', is_categorical=True)
         replace_nan(df, 'host_response_rate', is_percent=True)
         replace_nan(df, 'beds', is_categorical=True)
         replace_nan(df, 'review_scores_rating', is_percent=True)
@@ -194,8 +194,8 @@ def get_processed_data(file):
     pp = pprint.PrettyPrinter(width=80, compact=True)
     pp.pprint(sorted(df.columns))
     
-    df.to_csv('data/listings_cleansed.csv', index=False)
+    df.to_csv('data/listings_first_concat_clean.csv', index=False)
     return df
 
-csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv','data/newyork/listings_details.csv'])
-get_processed_data()
+csv_concat(['data/newyork/listings_details.csv','data/boston/listings_details.csv','data/seattle/listings_details.csv'])
+get_processed_data('data/listings_first_concat.csv')
