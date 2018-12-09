@@ -1,60 +1,61 @@
-import pandas as pd
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.feature_selection import VarianceThreshold
-from sklearn.model_selection import train_test_split, cross_validate
+import pandas
 
-data = pd.read_csv('./data/listings_first_concat_clean.csv')
-data = data.loc[data['price'] < 699]
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.feature_selection import VarianceThreshold
+from sklearn.linear_model import LinearRegression, ElasticNet, Lasso, Ridge
+from sklearn.model_selection import cross_validate
+
+data = pandas.read_csv('data/listings_first_concat_clean.csv')
 data = data.sample(frac=1)
+data = data.loc[data['price'] < 699]
 
 y = data['price']
 X = data.drop(['price'], axis=1)
-selector = VarianceThreshold(0.04)
-print(X.shape)
-X = selector.fit_transform(X)
-print(X.shape)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, shuffle=True)
+X = VarianceThreshold(0.1).fit_transform(X)
+
+folds = 5
 
 print("Random Forest")
-clf = RandomForestRegressor(n_estimators=500, max_features=14, max_depth=40)
-clf.fit(X_train, y_train)
-print(clf.score(X_train, y_train))
-print(clf.score(X_test, y_test))
+clf = RandomForestRegressor(n_estimators=300)
+results = cross_validate(clf, X, y, cv=folds, return_train_score=True)
+avg_train = sum(results['train_score']) / folds
+avg_test = sum(results['test_score']) / folds
+print(avg_train, avg_test)
 
-# cv_results = cross_validate(clf, X, y, cv=3, return_train_score=True)
-# print(sorted(cv_results.keys()))
-# print(cv_results['test_score'])
-# print(cv_results['train_score'])
+print("Linear Regression")
+reg = LinearRegression(normalize=True, n_jobs=-1)
+results = cross_validate(reg, X, y, cv=folds, return_train_score=True)
+avg_train = sum(results['train_score']) / folds
+avg_test = sum(results['test_score']) / folds
+print(avg_train, avg_test)
 
-# print("Ridge Regression")
-# ridge = Ridge(alpha=1.0)
-# ridge.fit(X,y)
-# print(ridge.score(X_train,y_train))
-# print(ridge.score(X_test,y_test))
+print("Elastic Net")
+r_reg = ElasticNet(l1_ratio=0.7, random_state=42)
+results = cross_validate(r_reg, X, y, cv=folds, return_train_score=True)
+avg_train = sum(results['train_score']) / folds
+avg_test = sum(results['test_score']) / folds
+print(avg_train, avg_test)
 
-# print("ElasticNet Regression")
-# elast = ElasticNet(random_state=0)
-# elast.fit(X_train, y_train)
-# print(elast.score(X_train, y_train))
-# print(elast.score(X_test, y_test))
+print("Ridge Regressor")
+ridge = Ridge(alpha=1.0)
+results = cross_validate(ridge, X, y, cv=folds, return_train_score=True)
+avg_train = sum(results['train_score']) / folds
+avg_test = sum(results['test_score']) / folds
+print(avg_train, avg_test)
 
-# print("Polynomial Regression")
-# poly = PolynomialFeatures(2)
-# poly_X = poly.fit_transform(X)
-# X_train, X_test, y_train, y_test = train_test_split(poly_X, y, test_size=0.3, random_state=42, shuffle=True)
-# lr = LinearRegression()
-# lr.fit(X_train,y_train)
-# print(lr.score(X_train[:100], y_train[:100]))
-# print(lr.score(X_test, y_test))
+print("Lasso Regressor")
+lasso = Lasso(alpha=0.05, copy_X=True, fit_intercept=True, max_iter=500,
+              normalize=True, positive=False, precompute=False, random_state=None,
+              selection='cyclic', tol=0.0001, warm_start=False)
+results = cross_validate(lasso, X, y, cv=folds, return_train_score=True)
+avg_train = sum(results['train_score']) / folds
+avg_test = sum(results['test_score']) / folds
+print(avg_train, avg_test)
 
-# lr = LinearRegression().fit(X,y)
-# data = data.loc[data['price'] < 699]
-# prices = np.array(data["price"])
-# prices = prices.reshape(-1, 1)
-# data["bin"] = KMeans(n_clusters=15).fit_predict(prices)
-#
-# ranges = {}
-# for cluster in set(data["bin"]):
-#     df = data.loc[data['bin'] == cluster]
-#     ranges[cluster] = (min(df["price"]), max(df["price"]), len(df))
-#     print(cluster, ranges[cluster])
+print("Gradient Boosted Regressor")
+gbr = GradientBoostingRegressor(n_estimators=500, learning_rate=0.05, max_depth=12, random_state=42, loss='ls')
+results = cross_validate(gbr, X, y, cv=folds, return_train_score=True)
+avg_train = sum(results['train_score']) / folds
+avg_test = sum(results['test_score']) / folds
+print(avg_train, avg_test)
+

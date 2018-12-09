@@ -5,6 +5,10 @@ import requests
 
 
 # Read in a csv file from a given path
+from sklearn.feature_extraction.text import TfidfVectorizer
+from textblob import TextBlob
+
+
 def get_data(filepath):
     df = pandas.read_csv(filepath)
     return df
@@ -143,12 +147,20 @@ def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         data = pandas.read_csv(files)
-        df = df.append(data)
+        if files == 'data/newyork/listings_details.csv':
+            df = df.append(data[:3000])
+        else:
+            df = df.append(data)
     df.reset_index().drop(
-        ['index', 'host_since', 'host_id', 'host_name', 'id', 'host_response_time', 'host_response_rate',
-         'host_acceptance_rate', 'host_verifications', 'host_identity_verified', 'description','market'],
+        ['index','Unnamed: 0', 'host_since', 'host_id', 'host_name', 'id', 'market'],
         axis=1).to_csv('data/listings_first_concat.csv', index=False)
 
+def convert_to_sentiment(df,col):
+    df[col] = df[col].apply(convert_text_to_sentiment)
+
+def convert_text_to_sentiment(text):
+    analysis = TextBlob(str(text))
+    return analysis.sentiment.polarity
 
 # function that returns cleaned dataframe
 def get_processed_data():
@@ -156,9 +168,9 @@ def get_processed_data():
 
     nan_checker(df)
     try:
-        # replace_nan(df, 'host_response_rate', is_percent=True)
-        # replace_nan(df, 'host_acceptance_rate', is_percent=True)
-        # replace_nan(df, 'host_response_time', is_categorical=True)
+        replace_nan(df, 'host_response_rate', is_percent=True)
+        replace_nan(df, 'host_acceptance_rate', is_percent=True)
+        replace_nan(df, 'host_response_time', is_categorical=True)
         replace_nan(df, 'beds', is_categorical=True)
         replace_nan(df, 'review_scores_rating', is_percent=True)
     except Exception as e:
@@ -168,32 +180,19 @@ def get_processed_data():
     convert_price_to_integer(df, 'price')
     convert_to_columns(df, 'amenities')
     # count_list_in_column(df, 'amenities', "amenities_count")
-    # count_list_in_column(df, 'host_verifications', "verifications_count")
-    # encode(df, 'host_identity_verified')
-    # encode(df, 'host_response_time')
+    count_list_in_column(df, 'host_verifications', "verifications_count")
+    encode(df, 'host_identity_verified')
+    encode(df, 'host_response_time')
+    # encode(df, 'market')
     encode(df, 'host_is_superhost')
     encode(df, 'property_type')
     encode(df, 'room_type')
     encode(df, 'bed_type')
-    # encode(df, 'market')
     encode(df, 'cancellation_policy')
     encode(df, 'neighbourhood')
-
+    convert_to_sentiment(df,'description')
     df.to_csv('data/listings_first_concat_clean.csv', index=False)
     return df
 
-
-# shuffle_file('data/newyork/listings_newyork.csv')
-# reduce_size('data/newyork/listings_newyork.csv', 8000,'data/newyork/listings_newyork_reduced.csv')
-
-# add_column_with('data/boston/listings_details.csv','market','Boston')
-# add_column_with('data/seattle/listings_details.csv','market','Seattle')
-# add_column_with('data/newyork/listings_details.csv','market','New York')
-
-csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv'])
+csv_concat(['data/boston/listings_details.csv', 'data/seattle/listings_details.csv','data/newyork/listings_details.csv'])
 get_processed_data()
-
-# Downloads all the images for a given column to the given dir
-# df = get_data('data/3/listings_images_old.csv')
-# download_images(df, 'picture_url', 'picture', 'data/3/listings_images.csv')
-# print(df)
