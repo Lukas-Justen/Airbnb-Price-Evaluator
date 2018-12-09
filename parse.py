@@ -164,7 +164,7 @@ def convert_text_to_sentiment(text):
     return analysis.sentiment.polarity
 
 # function that returns cleaned dataframe
-def get_processed_data(file, encode=False):
+def get_processed_data(file):
     df = get_data(file)
 
     nan_checker(df)
@@ -181,16 +181,15 @@ def get_processed_data(file, encode=False):
     convert_to_columns(df, 'amenities')
     count_list_in_column(df, 'host_verifications', "verifications_count")
     convert_to_sentiment(df,'description')
-    
-    if encode:
-        encode(df, 'host_identity_verified')
-        encode(df, 'host_response_time')
-        encode(df, 'host_is_superhost')
-        encode(df, 'property_type')
-        encode(df, 'room_type')
-        encode(df, 'bed_type')
-        encode(df, 'cancellation_policy')
-        encode(df, 'neighbourhood') 
+
+    encode(df, 'host_identity_verified')
+    encode(df, 'host_response_time')
+    encode(df, 'host_is_superhost')
+    encode(df, 'property_type')
+    encode(df, 'room_type')
+    encode(df, 'bed_type')
+    encode(df, 'cancellation_policy')
+    encode(df, 'neighbourhood')
 
     pp = pprint.PrettyPrinter(width=80, compact=True)
     pp.pprint(sorted(df.columns))
