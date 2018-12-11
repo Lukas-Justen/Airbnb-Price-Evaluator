@@ -12,7 +12,7 @@ __Boston__ (3586 rows): https://www.kaggle.com/airbnb/boston
 
 __Seattle__ (3818 rows): https://www.kaggle.com/airbnb/seattle 
 
-__New York__ (44317 rows): https://www.kaggle.com/peterzhou/airbnb-open-data-in-nyc 
+__New York__ (44317 rows but only 3000 or 6000 examples used): https://www.kaggle.com/peterzhou/airbnb-open-data-in-nyc 
 
 Preprocessing of the dataset was performed using Trifacta and Python. The preprocessing scripts are included in the data folder and the parse.py file. In order to evaluate our models, we calculated 5-fold cross-validated R2 scores, where our task was to predict the price value for an unseen Airbnb. The features used for each analysis are included in the Table below this section. In total from each file there are 104 potential features from all data sources (NY has some additional that we removed). All modeling work is done in the model.py file on our Github (currently best parameters are in the file). 
 
