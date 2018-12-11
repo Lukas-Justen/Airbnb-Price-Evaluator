@@ -6,13 +6,33 @@ Our goal in this project was to gain insight into the world of Airbnb market dyn
 
 Dataset, Preprocessing, and Evaluation 
 --------------------------------------
-Our dataset was provided from three different Kaggle repositories - detailing the same features for Boston, Seattle, and New York City (all 5 boroughs included). Links to each dataset are included in Table 1. Preprocessing of the dataset was performed using Trifacta and Python. The preprocessing scripts are included in the data folder and the parse.py file. In order to evaluate our models, we calculated 5-fold cross-validated R2 scores, where our task was to predict the price value for an unseen Airbnb. The features used for each analysis are included in Table 2. In total from each file there are 104 potential features from all data sources (NY has some additional that we removed). All modeling work is done in the model.py file on our Github (currently best parameters are in the file). 
+Our dataset was provided from three different Kaggle repositories - detailing the same features for Boston, Seattle, and New York City (all 5 boroughs included). Links to each dataset are included here:  
 
 __Boston__ (3586 rows): https://www.kaggle.com/airbnb/boston 
 
 __Seattle__ (3818 rows): https://www.kaggle.com/airbnb/seattle 
 
 __New York__ (44317 rows): https://www.kaggle.com/peterzhou/airbnb-open-data-in-nyc 
+
+Preprocessing of the dataset was performed using Trifacta and Python. The preprocessing scripts are included in the data folder and the parse.py file. In order to evaluate our models, we calculated 5-fold cross-validated R2 scores, where our task was to predict the price value for an unseen Airbnb. The features used for each analysis are included in the Table below this section. In total from each file there are 104 potential features from all data sources (NY has some additional that we removed). All modeling work is done in the model.py file on our Github (currently best parameters are in the file). 
+
+| Basic | Advanced | Deep|
+|------|--------|-------|
+|latitude|review_scores_rating|description|
+|longitude|reviews_per_month|picture_url|
+|property_type|number_of_reviews|host_picture_url|
+|room_type|host_response_time
+|accommodates|host_response_rate
+|bathrooms|host_is_superhost
+|bedrooms|host_total_listings_count
+|beds|host_verifications
+|cancellation_policy|host_identity_verified
+|bed_type|host_acceptance_rate
+|amenities|
+|guests_included|
+|minimum_nights|
+|__13 new features__|__10 new features__|__3 new features__|
+
 
 Basic Analysis 
 --------------
@@ -36,6 +56,11 @@ Our conclusions to our work are summarized at a high level on the main landing w
 Group Member Work
 -----------------
 Throughout the duration of the project, all group members put substantial work into the direction and execution of the work completed. However, segmenting the work as requested,  Albert focused on exploratory feature analysis, Keith was responsible for model and feature selection, and Rhett and Lukas built and tuned the models. We feel strongly that each member was essential and had great value add. 
+
+![Results1](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/results1.png)
+![Results2](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/results2.png)
+![NewYork](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/ny.png)
+![Prices](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/prices.png)
 
 _by Keith Pallo, Rhett Dsouza, Albert Z. Guo, Lukas Justen_
 
