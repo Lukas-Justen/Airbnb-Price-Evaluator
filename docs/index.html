@@ -45,6 +45,10 @@
             <li class="pure-menu-item"><a
                     href="https://github.com/invinst/nu-collaboration/raw/master/01_Group/Project%20Report.pdf"
                     class="pure-menu-link">Report</a></li>
+
+            <li class="pure-menu-item"><a
+                    href="mailto:keith.n.pallo@gmail.com"
+                    class="pure-menu-link">Contact</a></li>
         </ul>
     </div>
 </div>
@@ -118,39 +122,14 @@
     </div>
 
     <div class="content">
-        <h2 class="content-head is-center">Goal and Aproach</h2>
-        <div style="width:60%;margin:0 auto">
-            <p width="400" align="justify">
-                Our goal in this project was to gain insight into the world of Airbnb market
-                dynamics. There are several different ways to accomplish this goal, but more specifically, we attempted
-                to predict the price for any Airbnb given standard measures such as the location of the listing, and the
-                features that any particular Airbnb offers. We divided this task into three different stages. First, in
-                our basic analysis, we sought to recommend a price for an individual looking to put a listing on Airbnb
-                for the first time. This means that features dependent on past historical performance cannot be included
-                (this is mainly reviews and host attributes). In our second analysis, which we call intermediate
-                analysis, we extended our use case to current Airbnb users, by adding in historical features. We
-                hypothesized that reviews play a strong part of customer perception. This would also help determine if
-                any given Airbnb is undervalued or overvalued given historical performance - which could be utilized by
-                current hosts to assist with future pricing. Finally, we performed an advanced analysis on further
-                features using deep learning, to see if we could predict the price from the description. This was an
-                optional objective - and we have completed it as such.</br></br>
-
-            </p>
-
-            <img src="./img/stages.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">
-        </div>
 
         <h2 class="content-head is-center">Dataset, Preprocessing, and Evaluation</h2>
         <div style="width:60%;margin:0 auto">
             <p width="400" align="justify">
-                Our dataset was provided from three different kaggle repositories - detailing the same features for
-                Boston, Seattle, and New York City (all 5 boroughs included). Links to each dataset are included in
-                Table 1. Preprocessing of the dataset was performed using Trifecta and Python. The preprocessing scripts
-                are included in the data folder and the parse.py file. In order to evaluate our models, we performed
-                5-fold cross validation r squared testing, where our task was to predict the price value for an unseen
-                Airbnb. The features used for each analysis are included in Table 2. In total from each file there are
-                104 potential features from all data sources (NY has some additional that we removed). All modeling work
-                is done in the model.py file on our Github (currently best parameters are in the file).
+                Our dataset was provided from three different Kaggle repositories - detailing the same features for
+                Boston, Seattle, and New York City (all 5 boroughs included). In order to evaluate our models, we
+                performed 5-fold cross validation r squared testing, where our task was to predict the price value for
+                an unseen Airbnb. Below is a visualization of each dataset.
             </p>
 
             <div class="pure-g" style="margin:0 auto;width:100%">
@@ -178,52 +157,64 @@
             </div>
         </div>
 
-        <h2 class="content-head is-center">1. Basic Analysis</h2>
+        <h2 class="content-head is-center">High Level Approach</h2>
         <div style="width:60%;margin:0 auto">
             <p width="400" align="justify">
-                Once our data was preprocessed, we included the basic features from Table 2, and ran multiple different
-                regression techniques (note, we did not include features with a * in the table, and choose a 3,000
-                listing subset of NYC data). We choose to run Linear, Lasso, Ridge, and Elastinet standard regressions
-                to help with different dependencies that may be present within the data, along with a random forest and
-                a gradient boosted regressor to represent ensemble methods. Our initial results are shown in Table 3.
-                Looking at these values, we were surprised that our standard regression techniques were performing much
-                better than our ensembles on test evaluation. We dove into the data and discovered two key insights.
-                First, thinking about how we would search for an Airbnb, we realized that location was likely the most
-                important feature. However, when we looked at our basic attributes we realized that longitude and
-                latitude were the only features representing this - and our model may have not been powerful enough. We
-                revisited the available features and added in the neighborhood feature - which is a location based
-                filter provided to users querying for an airbnb listing. Additionally, we looked further into the New
-                York dataset, as removing the tuples from our initial approach had significantly impacted our scores, as
-                shown in the right hand side of Table 3. When visualizing our data with Tableau (shown in Figure 1, we
-                realized that the New York dataset was not fully representing the market diversity well, as the dataset
-                was not fully shuffled. Shuffling our New York dataset (shown in Figure 2 ) and adding in location - our
-                train and test accuracy increased substantially as shown in Table 4. This accuracy bump represented a
-                core feature in machine learning that we discussed in class around the Netflix recommendation prize -
-                relevant features with a simple model are significantly more important than extraneous features with a
-                very complex model.</br></br>
+                Our approach was to use multiple different learners on the same dataset, and progressively increase the
+                complexity and representation of the features fed into each of our model’s. For our learners we chose
+                two separate sets – traditional regressors and ensemble regressors. Our traditional regressors were
+                Lasso, Ridge, Elastinet, and Linear Regressors. We chose each of these as they represent a good mix of
+                complexity and each can deal with different underlying probability distributions well. Our ensemble
+                methods were a random forest, and a gradient boosted regressor – each representing two of the most
+                popular ways to optimize based on fundamentally different approaches to bias and variance in any given
+                stage. Below is a visualization of the major stages we executed – and the key results section highlights
+                our takeaways from the process.</br></br>
+
             </p>
+
+            <img src="./img/stages.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">
+        </div>
+
+
+        <h2 class="content-head is-center">Key Results</h2>
+        <div style="width:60%;margin:0 auto">
+            <p width="400" align="justify">
+                Throughout the stages of our project, we gained several key insights around the importance of particular
+                features and the efficacy of different learners. First, we learned that the critical feature in this
+                case was an accurate representation of location – namely using the neighborhood of a listing as opposed
+                to latitude and longitude. Additionally, we learned that making sure a given dataset was accurately
+                represented is essential (this came from shuffling our NYC dataset more carefully). These two actions
+                produced the biggest effect on performance across all learners (represented in stage 1-> 2). Removing
+                outliers in the dataset also was helpful in our understanding and modeling (stage 2 -> 3). Additionally,
+                our initial hypothesis that reviews and host features would be excellent model attributes was misguided
+                – and we believe this is due to human rating tendencies (bifurcation of scores) and potentially
+                manufactured feedback (stage 3 -> 4). Also – we were surprised that sentiment of listing description was
+                not as relevant as well, but there is likely additional work that can be done to extract more meaning
+                (stage 4 -> 5). In terms of model performance, we learned that no matter the complexity of the simple
+                regressor (Ridge and Lasso) they eventually have a difficult time reaching acceptable accuracy with such
+                a complex task. We had originally hypothesized that one of the traditional regressors would eventually
+                beat out the others – but our work very much shows the importance of using ensemble methods with a
+                complex regression task. Finally, throughout the entirety of the project we learned just how important
+                the complexity of the underlying dataset is. New York was by far the most difficult market to model, and
+                we attempted many different mutations of both our models and the dataset to alleviate this bottlenefck.
+                This was an excellent learning with a real-world dataset – sometimes significantly more work is required
+                to reach acceptable performance, and it is not always clear as to why. Below we have represented our
+                outputs for all models and stages both with and without NYC to demonstrate this complexity.
+                </br></br>
+            </p>
+
+            <img src="./img/results_with_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">
+            <img src="./img/results_without_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">
         </div>
 
         <!--<div class="pure-g" style="margin:0 auto;width:90%">-->
-            <!--<div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style="margin:0 auto;width:50%;">-->
-                <!--<img src="./img/results_without_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">-->
-            <!--</div>-->
-            <!--<div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style="margin:0 auto;width:50%">-->
-                <!--<img src="./img/results_with_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">-->
-            <!--</div>-->
+        <!--<div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style="margin:0 auto;width:50%;">-->
+        <!--<img src="./img/results_without_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">-->
         <!--</div>-->
-
-        <div class="pure-g" style="margin:0 auto;width:90%">
-            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style="margin:0 auto;width:50%">
-                <img src="./img/results_with_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">
-            </div>
-        </div>
-
-        <div class="pure-g" style="margin:0 auto;width:90%">
-            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style="margin:0 auto;width:50%;">
-                <img src="./img/results_without_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">
-            </div>
-        </div>
+        <!--<div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style="margin:0 auto;width:50%">-->
+        <!--<img src="./img/results_with_ny.png" width="100%" style="box-shadow: 0 0 8px 8px white inset">-->
+        <!--</div>-->
+        <!--</div>-->
     </div>
 
 </div>
