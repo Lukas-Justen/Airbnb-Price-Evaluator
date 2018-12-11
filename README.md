@@ -57,10 +57,10 @@ Group Member Work
 -----------------
 Throughout the duration of the project, all group members put substantial work into the direction and execution of the work completed. However, segmenting the work as requested,  Albert focused on exploratory feature analysis, Keith was responsible for model and feature selection, and Rhett and Lukas built and tuned the models. We feel strongly that each member was essential and had great value add. 
 
-![Results1](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/results1.png)
-![Results2](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/results2.png)
-![NewYork](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/ny.png)
-![Prices](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/docs/img/prices.png)
+![Results1](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/website/img/results1.png)
+![Results2](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/website/img/results2.png)
+![NewYork](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/website/img/ny.png)
+![Prices](https://github.com/Lukas-Justen/Airbnb-Price-Evaluator/raw/master/website/img/prices.png)
 
 _by Keith Pallo, Rhett Dsouza, Albert Z. Guo, Lukas Justen_
 
