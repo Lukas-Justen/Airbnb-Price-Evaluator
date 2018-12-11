@@ -1,4 +1,4 @@
-# Airbnb-Price-Evaluator 
+# Airbnb Price Evaluator 
 
 Goal and Approach
 -----------------
