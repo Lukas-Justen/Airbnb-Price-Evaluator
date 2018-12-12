@@ -148,13 +148,13 @@ def csv_concat(filelist):
     df = pandas.DataFrame()
     for files in filelist:
         data = pandas.read_csv(files)
-        # if files == 'data/newyork/listings_details.csv':
+        # if files == '../data/newyork/listings_details.csv':
         #     df = df.append(data[:3000],sort=False)
         # else:
         df = df.append(data, sort=False)
     df.reset_index().drop(
-        ['index','Unnamed: 0', 'host_since','host_name', 'host_id', 'id', 'market'],
-        axis=1).to_csv('data/listings_first_concat.csv', index=False)
+        ['index', 'Unnamed: 0', 'host_since', 'host_name', 'host_id', 'id', 'market'],
+        axis=1).to_csv('../data/listings_first_concat.csv', index=False)
 
 def convert_to_sentiment(df,col):
     df[col] = df[col].apply(convert_text_to_sentiment)
@@ -193,9 +193,9 @@ def get_processed_data(file):
 
     pp = pprint.PrettyPrinter(width=80, compact=True)
     pp.pprint(sorted(df.columns))
-    
-    df.to_csv('data/listings_first_concat_clean.csv', index=False)
+
+    df.to_csv('../data/listings_first_concat_clean.csv', index=False)
     return df
 
-csv_concat(['data/newyork/listings_details.csv','data/boston/listings_details.csv','data/seattle/listings_details.csv'])
-get_processed_data('data/listings_first_concat.csv')
+csv_concat(['../data/newyork/listings_details.csv', '../data/boston/listings_details.csv', '../data/seattle/listings_details.csv'])
+get_processed_data('../data/listings_first_concat.csv')
