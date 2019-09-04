@@ -1,5 +1,7 @@
 # Airbnb Price Evaluator
 
+Project Website: https://lukas-justen.github.io/Airbnb-Price-Evaluator/
+
 Goal and Approach
 -----------------
 Our goal in this project was to gain insight into the world of Airbnb market dynamics. There are several different ways to accomplish this goal, but more specifically, we attempted to predict the price for any Airbnb given standard measures such as the location of the listing, and the features that any particular Airbnb offers. We divided this task into three different stages. First, in our basic analysis, we sought to recommend a price for an individual looking to put a listing on Airbnb for the first time. This means that features dependent on past historical performance cannot be included (this is mainly reviews and host attributes). In our second analysis, which we call intermediate analysis, we extended our use case to current Airbnb users, by adding in historical features. We hypothesized that reviews play a strong part of customer perception, and adding them to our model would boost accuracy significantly. This would also help determine if any given Airbnb is properly values given historical performance - which could be utilized by current hosts to assist with future pricing. Finally, we performed an advanced analysis on further features using deep learning. This was an optional objective - and we have completed it as such.
